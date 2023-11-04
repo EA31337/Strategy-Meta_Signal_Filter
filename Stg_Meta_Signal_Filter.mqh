@@ -24,15 +24,9 @@ enum ENUM_STG_SIGNAL_FILTER_CONDITION {
 
 // User input params.
 INPUT2_GROUP("Meta Signal Filter strategy: main params");
+INPUT2 ENUM_STRATEGY Meta_Signal_Filter_Strategy = STRAT_NONE;  // Strategy
 INPUT2 ENUM_STG_SIGNAL_FILTER_CONDITION Meta_Signal_Filter_Condition1 =
-    STG_SIGNAL_FILTER_COND_IS_PEAK;                             // Trade condition 1
-INPUT2 ENUM_STRATEGY Meta_Signal_Filter_Strategy1 = STRAT_AMA;  // Strategy 1 on condition 1
-INPUT2 ENUM_STG_SIGNAL_FILTER_CONDITION Meta_Signal_Filter_Condition2 =
-    STG_SIGNAL_FILTER_COND_IS_PIVOT;                                 // Trade condition 2
-INPUT2 ENUM_STRATEGY Meta_Signal_Filter_Strategy2 = STRAT_MA_TREND;  // Strategy 2 on condition 2
-INPUT2 ENUM_STG_SIGNAL_FILTER_CONDITION Meta_Signal_Filter_Condition3 =
-    STG_SIGNAL_FILTER_COND_0_NONE;                               // Trade condition 3
-INPUT2 ENUM_STRATEGY Meta_Signal_Filter_Strategy3 = STRAT_NONE;  // Strategy 3 on condition 3
+    STG_SIGNAL_FILTER_COND_IS_PEAK;  // Filter condition
 INPUT3_GROUP("Meta Signal Filter strategy: common params");
 INPUT3 float Meta_Signal_Filter_LotSize = 0;                // Lot size
 INPUT3 int Meta_Signal_Filter_SignalOpenMethod = 0;         // Signal open method
@@ -93,11 +87,7 @@ class Stg_Meta_Signal_Filter : public Strategy {
   /**
    * Event on strategy's init.
    */
-  void OnInit() {
-    StrategyAdd(Meta_Signal_Filter_Strategy1, 1);
-    StrategyAdd(Meta_Signal_Filter_Strategy2, 2);
-    StrategyAdd(Meta_Signal_Filter_Strategy3, 3);
-  }
+  void OnInit() { StrategyAdd(Meta_Signal_Filter_Strategy, 0); }
 
   /**
    * Sets strategy.
@@ -128,43 +118,20 @@ class Stg_Meta_Signal_Filter : public Strategy {
    * Check strategy's opening signal.
    */
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method, float _level = 0.0f, int _shift = 0) {
-    bool _result = false;
+    bool _result = true;
     // uint _ishift = _indi.GetShift();
     uint _ishift = _shift;
-    Ref<Strategy> _strat_ref;
-    if (!_result && Meta_Signal_Filter_Condition1 != STG_SIGNAL_FILTER_COND_0_NONE &&
-        strade.CheckCondition((ENUM_TRADE_CONDITION)Meta_Signal_Filter_Condition1)) {
-      _strat_ref = strats.GetByKey(1);
-      if (_strat_ref.IsSet()) {
-        _level = _level == 0.0f ? _strat_ref.Ptr().Get<float>(STRAT_PARAM_SOL) : _level;
-        _method = _method == 0 ? _strat_ref.Ptr().Get<int>(STRAT_PARAM_SOM) : _method;
-        _shift = _shift == 0 ? _strat_ref.Ptr().Get<int>(STRAT_PARAM_SHIFT) : _shift;
-        _result |= _strat_ref.Ptr().SignalOpen(_cmd, _method, _level, _shift);
-      }
-    }
-    if (!_result && Meta_Signal_Filter_Condition2 != STG_SIGNAL_FILTER_COND_0_NONE &&
-        strade.CheckCondition((ENUM_TRADE_CONDITION)Meta_Signal_Filter_Condition2)) {
-      _strat_ref = strats.GetByKey(2);
-      if (_strat_ref.IsSet()) {
-        _level = _level == 0.0f ? _strat_ref.Ptr().Get<float>(STRAT_PARAM_SOL) : _level;
-        _method = _method == 0 ? _strat_ref.Ptr().Get<int>(STRAT_PARAM_SOM) : _method;
-        _shift = _shift == 0 ? _strat_ref.Ptr().Get<int>(STRAT_PARAM_SHIFT) : _shift;
-        _result |= _strat_ref.Ptr().SignalOpen(_cmd, _method, _level, _shift);
-      }
-    }
-    if (!_result && Meta_Signal_Filter_Condition3 != STG_SIGNAL_FILTER_COND_0_NONE &&
-        strade.CheckCondition((ENUM_TRADE_CONDITION)Meta_Signal_Filter_Condition3)) {
-      _strat_ref = strats.GetByKey(3);
-      if (_strat_ref.IsSet()) {
-        _level = _level == 0.0f ? _strat_ref.Ptr().Get<float>(STRAT_PARAM_SOL) : _level;
-        _method = _method == 0 ? _strat_ref.Ptr().Get<int>(STRAT_PARAM_SOM) : _method;
-        _shift = _shift == 0 ? _strat_ref.Ptr().Get<int>(STRAT_PARAM_SHIFT) : _shift;
-        _result |= _strat_ref.Ptr().SignalOpen(_cmd, _method, _level, _shift);
-      }
-    }
+    Ref<Strategy> _strat_ref = strats.GetByKey(0);
     if (!_strat_ref.IsSet()) {
       // Returns false when strategy is not set.
       return false;
+    }
+    _level = _level == 0.0f ? _strat_ref.Ptr().Get<float>(STRAT_PARAM_SOL) : _level;
+    _method = _method == 0 ? _strat_ref.Ptr().Get<int>(STRAT_PARAM_SOM) : _method;
+    _shift = _shift == 0 ? _strat_ref.Ptr().Get<int>(STRAT_PARAM_SHIFT) : _shift;
+    _result &= _strat_ref.Ptr().SignalOpen(_cmd, _method, _level, _shift);
+    if (Meta_Signal_Filter_Condition1 != STG_SIGNAL_FILTER_COND_0_NONE) {
+      _result &= !strade.CheckCondition((ENUM_TRADE_CONDITION)Meta_Signal_Filter_Condition1);
     }
     return _result;
   }
