@@ -24,7 +24,7 @@ enum ENUM_STG_SIGNAL_FILTER_CONDITION {
 
 // User input params.
 INPUT2_GROUP("Meta Signal Filter strategy: main params");
-INPUT2 ENUM_STRATEGY Meta_Signal_Filter_Strategy = STRAT_NONE;  // Strategy
+INPUT2 ENUM_STRATEGY Meta_Signal_Filter_Strategy = STRAT_RSI;  // Strategy
 INPUT2 ENUM_STG_SIGNAL_FILTER_CONDITION Meta_Signal_Filter_Condition1 =
     STG_SIGNAL_FILTER_COND_IS_PEAK;  // Filter condition
 INPUT3_GROUP("Meta Signal Filter strategy: common params");
