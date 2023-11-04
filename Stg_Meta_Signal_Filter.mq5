@@ -1,6 +1,6 @@
 /**
  * @file
- * Implements Conditions meta strategy.
+ * Implements Signal Filter meta strategy.
  */
 
 // Includes conditional compilation directives.
@@ -38,10 +38,10 @@ input bool Info_On_Chart = true;          // Display info on chart.
 #include "Stg_Meta_Signal_Filter.mqh"
 
 // Defines.
-#define ea_name "Strategy Meta Conditions"
+#define ea_name "Strategy Meta Signal Filter"
 #define ea_version "2.000"
-#define ea_desc "Conditions meta strategy trades with different strategies based on the selected conditions."
-#define ea_link "https://github.com/EA31337/Strategy-Meta_Conditions"
+#define ea_desc "Signal Filter meta strategy to filter strategy signal based on the selected condition."
+#define ea_link "https://github.com/EA31337/Strategy-Meta_Signal_Filter"
 #define ea_author "EA31337 Ltd"
 
 // Properties.
@@ -67,7 +67,7 @@ int OnInit() {
   bool _result = true;
   EAParams ea_params(__FILE__, Log_Level);
   ea = new EA(ea_params);
-  _result &= ea.StrategyAdd<Stg_Meta_Conditions>(Active_Tfs);
+  _result &= ea.StrategyAdd<Stg_Meta_Signal_Filter>(Active_Tfs);
   return (_result ? INIT_SUCCEEDED : INIT_FAILED);
 }
 
