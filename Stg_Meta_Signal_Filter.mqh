@@ -26,7 +26,7 @@ enum ENUM_STG_SIGNAL_FILTER_CONDITION {
 INPUT2_GROUP("Meta Signal Filter strategy: main params");
 INPUT2 ENUM_STRATEGY Meta_Signal_Filter_Strategy = STRAT_RSI;  // Strategy
 INPUT2 ENUM_STG_SIGNAL_FILTER_CONDITION Meta_Signal_Filter_Condition1 =
-    STG_SIGNAL_FILTER_COND_IS_PEAK;  // Filter condition
+    STG_SIGNAL_FILTER_COND_IS_PIVOT;  // Filter condition
 INPUT3_GROUP("Meta Signal Filter strategy: common params");
 INPUT3 float Meta_Signal_Filter_LotSize = 0;                // Lot size
 INPUT3 int Meta_Signal_Filter_SignalOpenMethod = 0;         // Signal open method
